@@ -49,7 +49,7 @@ export default function DashboardCharts({ stats }: any) {
                 axisLine={false} 
                 tickLine={false} 
                 stroke="#94a3b8"
-                tick={{ fontWeight: 800, textTransform: 'uppercase' }}
+                tick={{ fontWeight: 800 }}
               />
               <YAxis 
                 fontSize={10} 
