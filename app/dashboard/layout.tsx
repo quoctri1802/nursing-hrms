@@ -29,22 +29,23 @@ export default function DashboardLayout({
         <Header />
         
         <div className="flex-1 flex flex-col overflow-hidden">
-          <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 custom-scrollbar">
-            <div className="mx-auto max-w-[1600px] animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-10 no-scrollbar">
+            <div className="mx-auto max-w-[1600px] animate-premium">
                {children}
             </div>
+            
+            <footer className="mt-12 py-10 px-8 text-center border-t border-slate-200/30">
+              <div className="flex flex-col items-center gap-2">
+                 <p className="text-slate-900 text-[10px] font-black uppercase tracking-[0.2em] opacity-50">
+                   © 2026 TTYT Quận Liên Chiểu - Nursing HRMS
+                 </p>
+                 <div className="h-px w-8 bg-slate-200" />
+                 <p className="text-[9px] font-black text-blue-400 uppercase tracking-[0.3em]">
+                   Premium Hospital Management
+                 </p>
+              </div>
+            </footer>
           </main>
-          
-          <footer className="py-5 px-8 text-center border-t border-slate-200/50 bg-white/40 backdrop-blur-xl">
-            <div className="flex flex-col items-center gap-1.5 font-sans">
-               <p className="text-slate-900 text-[10px] font-black uppercase tracking-[0.2em]">
-                 © 2026 Trung tâm Y tế khu vực Liên Chiểu - Hệ thống Quản lý Nhân lực Điều dưỡng
-               </p>
-               <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] hover:text-blue-600 transition-colors cursor-default">
-                 Design by tritnq
-               </p>
-            </div>
-          </footer>
         </div>
       </div>
     </div>

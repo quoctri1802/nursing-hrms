@@ -3,20 +3,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 import { 
   LayoutDashboard, 
   Users, 
   ClipboardList, 
   Calendar, 
   Bell, 
-  Settings, 
   Building2,
   LogOut,
   ChevronRight,
   BookOpen,
   ShieldCheck,
   Briefcase,
-  Heart
+  Heart,
+  Menu,
+  X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { signOut, useSession } from "next-auth/react";
@@ -69,7 +71,13 @@ const menuItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const [isOpen, setIsOpen] = useState(false);
   const userRole = (session?.user as any)?.role || "NURSE";
+
+  // Đóng sidebar khi chuyển trang trên mobile
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
 
   const filteredMenu = menuItems.filter(item => 
     item.roles.includes(userRole)
@@ -98,88 +106,112 @@ export function Sidebar() {
   const roleStyles = getRoleStyles(userRole);
 
   return (
-    <aside className="hidden md:flex flex-col w-64 bg-white/60 backdrop-blur-xl border-r border-slate-200/50 shadow-sm relative z-20 font-sans">
-      <div className="p-6">
-        <div className="flex flex-col items-center gap-2 mb-8 text-center text-slate-800">
-          <div className="relative h-20 w-20 mb-2">
-            <Image
-              src="/logo.png"
-              alt="Logo TTYT Liên Chiểu"
-              fill
-              className="object-contain"
-              priority
-            />
-          </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-extrabold uppercase leading-tight">
-              TTYT Liên Chiểu
-            </span>
-            <span className="text-[9px] font-bold text-blue-600 uppercase tracking-widest opacity-80">
-              NURSE HRMS
-            </span>
-          </div>
-        </div>
+    <>
+      {/* Mobile Toggle Button */}
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="fixed top-4 left-4 z-50 p-3 bg-white/80 backdrop-blur-md rounded-2xl border border-slate-200 shadow-xl md:hidden hover:scale-105 active:scale-95 transition-all"
+      >
+        {isOpen ? <X className="h-6 w-6 text-slate-600" /> : <Menu className="h-6 w-6 text-slate-600" />}
+      </button>
 
-        <nav className="space-y-1">
-          {filteredMenu.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "group flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-all",
-                  isActive 
-                    ? "bg-blue-50 text-blue-700 shadow-sm" 
-                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                )}
-              >
-                <div className="flex items-center gap-3">
-                  <item.icon className={cn(
-                    "h-5 w-5 transition-colors",
-                    isActive ? "text-blue-600" : "text-slate-400 group-hover:text-slate-600"
-                  )} />
-                  {item.title}
-                </div>
-                {isActive && <ChevronRight className="h-4 w-4" />}
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
+      {/* Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 md:hidden animate-in fade-in duration-300"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
 
-      <div className="mt-auto p-4 border-t border-slate-100/50">
-        <div className="flex items-center gap-3 p-3 bg-white/50 backdrop-blur-md rounded-2xl border border-slate-100 shadow-sm mb-3 group hover:bg-white hover:shadow-md transition-all duration-300">
-          <div className={cn(
-            "h-10 w-10 rounded-xl flex items-center justify-center font-black text-sm shadow-lg transition-transform group-hover:scale-105 ring-2 ring-white",
-            roleStyles.split(' ').slice(1).join(' ')
-          )}>
-            {cleanName.split(" ").pop()?.charAt(0) || "U"}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-black text-slate-900 truncate leading-none mb-1 uppercase tracking-tight">
-              {cleanName}
-            </p>
-            <div className="flex items-center gap-1.5 leading-none">
-              {userRole === "ADMIN" && <ShieldCheck className="h-2.5 w-2.5 text-purple-600" />}
-              {userRole === "NURSE_DIRECTOR" && <Briefcase className="h-2.5 w-2.5 text-indigo-600" />}
-              {userRole === "HEAD_NURSE" && <ClipboardList className="h-2.5 w-2.5 text-blue-600" />}
-              {userRole === "NURSE" && <Heart className="h-2.5 w-2.5 text-emerald-600" />}
-              <p className={cn("text-[10px] font-black uppercase tracking-widest truncate", roleStyles.split(' ')[0])}>
-                {getRoleLabel(userRole)}
-              </p>
+      {/* Sidebar Container */}
+      <aside className={cn(
+        "fixed inset-y-0 left-0 z-40 w-72 bg-white/80 backdrop-blur-2xl border-r border-white/40 shadow-2xl transition-transform duration-500 ease-out md:relative md:translate-x-0 flex flex-col",
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
+        <div className="flex flex-col h-full p-6 pt-10 md:pt-6">
+          {/* Logo Section */}
+          <div className="flex flex-col items-center gap-2 mb-10 text-center animate-premium">
+            <div className="relative h-20 w-20 mb-2 drop-shadow-2xl">
+              <Image
+                src="/logo.png"
+                alt="Logo"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-base font-black text-slate-800 uppercase tracking-tighter leading-none">
+                TTYT Liên Chiểu
+              </span>
+              <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] mt-1">
+                Nursing HRMS
+              </span>
             </div>
           </div>
+
+          {/* Navigation Links */}
+          <nav className="flex-1 space-y-1.5 overflow-y-auto no-scrollbar pr-1">
+            {filteredMenu.map((item, idx) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "group flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-300 animate-premium",
+                    isActive 
+                      ? "bg-blue-600 text-white shadow-[0_10px_20px_-5px_rgba(37,99,235,0.4)]" 
+                      : "text-slate-500 hover:bg-white hover:text-slate-900 hover:shadow-md"
+                  )}
+                  style={{ animationDelay: `${idx * 50}ms` }}
+                >
+                  <div className="flex items-center gap-4">
+                    <item.icon className={cn(
+                      "h-5 w-5 transition-transform duration-300 group-hover:scale-110",
+                      isActive ? "text-white" : "text-slate-400 group-hover:text-blue-600"
+                    )} />
+                    <span className={cn("font-bold tracking-tight", isActive ? "font-extrabold" : "font-semibold")}>
+                      {item.title}
+                    </span>
+                  </div>
+                  {isActive && <div className="h-1.5 w-1.5 rounded-full bg-white shadow-glow" />}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* User Profile Section */}
+          <div className="mt-6 pt-6 border-t border-slate-100/50">
+            <div className="flex items-center gap-3 p-4 bg-white/50 backdrop-blur-md rounded-3xl border border-white/60 shadow-sm mb-4 group hover:bg-white hover:shadow-xl transition-all duration-500">
+              <div className={cn(
+                "h-11 w-11 rounded-2xl flex items-center justify-center font-black text-sm shadow-inner transition-transform group-hover:scale-105",
+                roleStyles.split(' ').slice(1).join(' ')
+              )}>
+                {cleanName.split(" ").pop()?.charAt(0) || "U"}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-black text-slate-900 truncate tracking-tight mb-0.5">
+                  {cleanName}
+                </p>
+                <div className="flex items-center gap-1.5 leading-none">
+                  <p className={cn("text-[9px] font-black uppercase tracking-widest truncate", roleStyles.split(' ')[0])}>
+                    {getRoleLabel(userRole)}
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="flex items-center gap-4 w-full px-6 py-4 text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 rounded-2xl hover:bg-red-50 hover:text-red-600 transition-all active:scale-[0.98] group"
+            >
+              <LogOut className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+              Đăng xuất
+            </button>
+          </div>
         </div>
-        
-        <button
-          onClick={() => signOut({ callbackUrl: "/login" })}
-          className="flex items-center gap-3 w-full px-4 py-3 text-xs font-black uppercase tracking-[0.2em] text-slate-500 rounded-xl hover:bg-red-50 hover:text-red-600 transition-all active:scale-[0.98] group"
-        >
-          <LogOut className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-          Đăng xuất
-        </button>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }

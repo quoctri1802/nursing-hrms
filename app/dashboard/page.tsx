@@ -3,9 +3,9 @@ import { authOptions } from "@/lib/auth";
 import { 
   Users, 
   Activity, 
-  AlertTriangle,
-  ClipboardList,
+  ClipboardList, 
   ShieldCheck,
+  TrendingUp,
 } from "lucide-react";
 import { getDashboardStats } from "@/app/actions/dashboard";
 import { cn } from "@/lib/utils";
@@ -13,46 +13,44 @@ import { redirect } from "next/navigation";
 import DashboardChartsWrapper from "@/components/dashboard/DashboardChartsWrapper";
 
 /**
- * Component hiển thị thẻ chỉ số tổng quát
+ * Component hiển thị thẻ chỉ số tổng quát - Premium Version
  */
-function StatCard({ title, value, subtitle, icon: Icon, color, isHighlight }: any) {
+function StatCard({ title, value, subtitle, icon: Icon, color, isHighlight, delay }: any) {
   const colors: any = {
-    blue: "bg-blue-50/50 text-blue-600 border-blue-100/50 shadow-blue-900/5",
-    red: "bg-red-50/50 text-red-600 border-red-100/50 shadow-red-900/5",
-    green: "bg-green-50/50 text-green-600 border-green-100/50 shadow-green-900/5",
-    orange: "bg-orange-50/50 text-orange-600 border-orange-100/50 shadow-orange-900/5",
-    indigo: "bg-indigo-50/50 text-indigo-600 border-indigo-100/50 shadow-indigo-900/5",
+    blue: "bg-blue-600/10 text-blue-600 border-blue-200/50",
+    orange: "bg-orange-600/10 text-orange-600 border-orange-200/50",
+    green: "bg-green-600/10 text-green-600 border-green-200/50",
+    indigo: "bg-indigo-600/10 text-indigo-600 border-indigo-200/50",
   };
 
   return (
     <div 
       className={cn(
-        "bg-white/70 backdrop-blur-md p-6 rounded-[32px] border transition-all hover:shadow-2xl hover:-translate-y-1 group relative overflow-hidden animate-fade-in-up",
-        isHighlight ? "border-indigo-200 shadow-[0_20px_50px_rgba(79,70,229,0.1)] ring-4 ring-indigo-50/50" : "border-slate-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+        "glass-card p-7 rounded-4xl border transition-all hover:shadow-2xl hover:-translate-y-2 group relative overflow-hidden animate-premium",
+        isHighlight ? "border-indigo-200 bg-indigo-50/20" : "border-white/40"
       )}
-      style={{ animationDelay: `${Math.random() * 0.5}s` }}
+      style={{ animationDelay: `${delay}ms` }}
     >
-      {isHighlight && (
-        <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-full blur-2xl -mr-12 -mt-12 animate-pulse" />
-      )}
       <div className="flex items-start justify-between relative z-10">
-        <div className="space-y-1">
-          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{title}</p>
+        <div className="space-y-2">
+          <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.25em]">{title}</p>
           <p className={cn(
-            "text-3xl font-black tracking-tighter tabular-nums",
-            isHighlight ? "text-indigo-600" : "text-slate-900"
+            "text-4xl font-black tracking-tighter tabular-nums",
+            isHighlight ? "text-indigo-700" : "text-slate-900"
           )}>{value}</p>
           {subtitle && (
-            <p className="text-[10px] text-slate-400 font-bold italic opacity-60 mt-1">{subtitle}</p>
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wide opacity-80">{subtitle}</p>
           )}
         </div>
         <div className={cn(
-          "p-4 rounded-2xl shadow-inner border transition-transform duration-500 group-hover:scale-110",
+          "p-4 rounded-2xl shadow-sm border transition-all duration-500 group-hover:scale-110 group-hover:rotate-6",
           colors[color || "blue"]
         )}>
           <Icon className="h-6 w-6" />
         </div>
       </div>
+      {/* Decorative element */}
+      <div className="absolute -bottom-6 -right-6 h-24 w-24 bg-current opacity-[0.03] rounded-full blur-3xl pointer-events-none" />
     </div>
   );
 }
@@ -60,45 +58,44 @@ function StatCard({ title, value, subtitle, icon: Icon, color, isHighlight }: an
 /**
  * Component hiển thị dòng cảnh báo đơn vị
  */
-function WarningRow({ name, status, ratio, staff, patients, isOverloaded }: any) {
+function WarningRow({ name, ratio, staff, patients, isOverloaded }: any) {
   return (
-    <tr className="hover:bg-slate-50/80 transition-all group">
-      <td className="px-6 py-5 font-black text-slate-900 uppercase tracking-tighter">{name}</td>
-      <td className="px-6 py-5">
-        <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest shadow-sm border ${
+    <tr className="hover:bg-white/50 transition-all group">
+      <td className="px-8 py-6 font-black text-slate-800 uppercase tracking-tighter text-base">{name}</td>
+      <td className="px-8 py-6">
+        <div className={cn(
+          "inline-flex items-center gap-2 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm border",
           isOverloaded ? 'bg-red-50 text-red-600 border-red-100' : 'bg-green-50 text-green-600 border-green-100'
-        }`}>
-          {isOverloaded ? "Cần điều phối" : "Ổn định"}
-        </span>
-      </td>
-      <td className="px-6 py-5 text-center text-blue-600 font-black tabular-nums text-lg tracking-tighter">{ratio}</td>
-      <td className="px-6 py-5 text-center">
-        <div className="flex items-center justify-center gap-2">
-          <span className="text-slate-900 font-black">{staff}</span> 
-          <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">NV</span>
-          <span className="text-slate-200">/</span>
-          <span className="text-orange-600 font-black">{patients}</span>
-          <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">BN</span>
+        )}>
+          <div className={cn("h-1.5 w-1.5 rounded-full animate-pulse", isOverloaded ? "bg-red-500" : "bg-green-500")} />
+          {isOverloaded ? "Cần phối hợp" : "Ổn định"}
         </div>
       </td>
-      <td className="px-6 py-5 text-right">
-        <button className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-all hover:underline">
+      <td className="px-8 py-6 text-center">
+        <span className="text-blue-600 font-black tabular-nums text-2xl tracking-tighter">{ratio}</span>
+        <span className="text-[10px] text-slate-400 ml-1 font-bold">BN/ĐD</span>
+      </td>
+      <td className="px-8 py-6 text-center">
+        <div className="flex items-center justify-center gap-2.5">
+          <div className="flex flex-col items-center">
+             <span className="text-slate-900 font-black text-lg">{staff}</span>
+             <span className="text-[8px] text-slate-400 font-black uppercase">Nhân sự</span>
+          </div>
+          <div className="h-8 w-px bg-slate-100" />
+          <div className="flex flex-col items-center">
+             <span className="text-orange-600 font-black text-lg">{patients}</span>
+             <span className="text-[8px] text-slate-400 font-black uppercase">Bệnh nhân</span>
+          </div>
+        </div>
+      </td>
+      <td className="px-8 py-6 text-right">
+        <button className="px-5 py-2.5 bg-white rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-600 border border-slate-100 shadow-sm hover:bg-slate-900 hover:text-white transition-all">
           Chi tiết
         </button>
       </td>
     </tr>
   );
 }
-
-const dataTrend = [
-  { day: "T2", value: 1.2 },
-  { day: "T3", value: 1.5 },
-  { day: "T4", value: 1.1 },
-  { day: "T5", value: 2.4 },
-  { day: "T6", value: 2.8 },
-  { day: "T7", value: 2.2 },
-  { day: "CN", value: 1.8 },
-];
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -112,77 +109,92 @@ export default async function DashboardPage() {
   const userDeptName = (session?.user as any)?.departmentName;
 
   const stats = await getDashboardStats(userRole === "HEAD_NURSE" ? userDeptId : undefined);
-  const displayDeptName = userRole === "HEAD_NURSE" ? `Khoa ${userDeptName}` : "TTYT KHU VỰC LIÊN CHIỂU";
+  const displayDeptName = userRole === "HEAD_NURSE" ? `${userDeptName}` : "TTYT QUẬN LIÊN CHIỂU";
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tighter uppercase leading-none">{displayDeptName}</h1>
-          <p className="text-slate-500 text-sm font-medium mt-2 italic shadow-slate-100">Hệ thống ghi nhận trạng thái lúc <span className="text-blue-600 font-bold">{stats?.lastUpdate || "--:--"}</span> hôm nay.</p>
+    <div className="space-y-10 pb-10">
+      {/* Page Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pt-4">
+        <div className="space-y-3">
+          <div className="flex items-center gap-3">
+             <div className="h-8 w-1.5 bg-blue-600 rounded-full" />
+             <h2 className="text-[11px] font-black text-blue-600 uppercase tracking-[0.4em]">Tổng quan nhân lực</h2>
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 tracking-tighter uppercase leading-[0.9]">{displayDeptName}</h1>
+          <p className="text-slate-400 text-sm font-medium tracking-tight">Cập nhật lần cuối: <span className="text-slate-900 font-bold">{stats?.lastUpdate || "--:--"}</span></p>
         </div>
-        <div className="flex items-center gap-4 text-[10px] font-black text-slate-600 bg-white/70 backdrop-blur-md px-6 py-3.5 rounded-2xl border border-slate-200/60 shadow-xl shadow-slate-900/5 uppercase tracking-[0.2em]">
-          <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-          </span>
-          Trạng thái: Hoạt động ổn định
+        
+        <div className="flex items-center gap-4 bg-white/60 backdrop-blur-md px-6 py-4 rounded-3xl border border-white shadow-xl">
+          <div className="h-3 w-3 rounded-full bg-green-500 animate-pulse" />
+          <span className="text-[11px] font-black text-slate-700 uppercase tracking-widest">Hệ thống sẵn sàng</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         <StatCard 
           title="ĐD Chăm sóc" 
           value={stats?.totalOnDutyStaff || 0} 
-          subtitle={`Trong tổng số ${stats?.totalStaff || 0} NV`}
+          subtitle={`Trên tổng ${stats?.totalStaff || 0} NV`}
           icon={Users}
           color="blue"
+          delay={100}
         />
         <StatCard 
-          title="Số bệnh nhân" 
+          title="Bệnh nhân" 
           value={stats?.totalPatients || 0} 
-          subtitle="Đang điều trị toàn viện"
+          subtitle="Đang điều trị"
           icon={Activity}
           color="orange"
+          delay={200}
         />
         <StatCard 
           title="Báo cáo ngày" 
           value={`${stats?.reportsToday || 0}/${stats?.totalExpectedReports || 0}`} 
-          subtitle="Tiến độ nạp báo cáo khoa"
-          icon={Activity}
+          subtitle="Tiến độ hoàn thành"
+          icon={ClipboardList}
           color="green"
+          delay={300}
         />
         <StatCard 
-          title="Nhu cầu định mức" 
-          value={`${stats?.totalRequiredStaff || 0} ĐD`} 
-          subtitle={stats?.isGlobalShortage ? `Thiếu hụt ${stats?.totalRequiredStaff - stats?.totalOnDutyStaff} nhân sự` : "Đảm bảo định mức an toàn"}
+          title="Định mức an toàn" 
+          value={`${stats?.totalRequiredStaff || 0}`} 
+          subtitle={stats?.isGlobalShortage ? "Cần bổ sung nhân sự" : "Đạt chuẩn an toàn"}
           icon={ShieldCheck}
           color="indigo"
           isHighlight={true}
+          delay={400}
         />
       </div>
 
-      {/* Tải biểu đồ thông qua Wrapper Client Component */}
-      <DashboardChartsWrapper stats={stats} dataTrend={dataTrend} />
+      {/* Charts Section */}
+      <div className="animate-premium" style={{ animationDelay: '500ms' }}>
+        <DashboardChartsWrapper stats={stats} />
+      </div>
 
+      {/* Warnings Table - Admin only */}
       {userRole === "ADMIN" && (
-        <div className="bg-white/70 backdrop-blur-md rounded-[40px] border border-slate-200/60 shadow-2xl overflow-hidden mb-12">
-          <div className="p-10 border-b border-slate-100 flex items-center justify-between bg-slate-50/30">
+        <div className="glass-card rounded-4xl border-white/40 overflow-hidden animate-premium" style={{ animationDelay: '600ms' }}>
+          <div className="p-10 border-b border-white/40 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div className="h-3 w-3 rounded-full bg-red-500 animate-pulse shadow-lg shadow-red-200"></div>
-              <h3 className="font-black text-slate-800 uppercase tracking-tighter text-xl">Đơn vị cần phối hợp nhân lực gấp</h3>
+              <div className="h-10 w-10 rounded-2xl bg-red-600/10 flex items-center justify-center">
+                <TrendingUp className="h-5 w-5 text-red-600" />
+              </div>
+              <div>
+                <h3 className="font-black text-slate-800 uppercase tracking-tighter text-2xl leading-none">Khoa phòng quá tải</h3>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Các đơn vị cần điều phối nhân lực gấp</p>
+              </div>
             </div>
-            <button className="text-blue-600 text-[10px] font-black uppercase tracking-[0.2em] hover:underline transition-all">Xem tất cả báo cáo</button>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-slate-50/50 text-slate-500 uppercase text-[10px] font-black tracking-[0.2em] shadow-inner font-sans">
+          <div className="overflow-x-auto no-scrollbar">
+            <table className="w-full text-left min-w-[900px]">
+              <thead className="bg-slate-50/50 text-slate-400 uppercase text-[10px] font-black tracking-[0.3em]">
                 <tr>
-                  <th className="px-6 py-5">Khoa / Phòng</th>
-                  <th className="px-6 py-5">Trạng thái</th>
-                  <th className="px-6 py-5 text-center">Tỷ lệ BN / ĐD</th>
-                  <th className="px-6 py-5 text-center">Nhân sự hiện tại</th>
-                  <th className="px-6 py-5 text-right">Chi tiết</th>
+                  <th className="px-8 py-5">Khoa / Phòng</th>
+                  <th className="px-8 py-5">Trạng thái</th>
+                  <th className="px-8 py-5 text-center">Tỷ lệ</th>
+                  <th className="px-8 py-5 text-center">Phân bổ</th>
+                  <th className="px-8 py-5 text-right">Thao tác</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -201,10 +213,12 @@ export default async function DashboardPage() {
                 }
                 {(stats?.ratioData || []).filter((d: any) => d.isOverloaded).length === 0 && (
                   <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-slate-400 font-bold italic">
-                       <div className="flex flex-col items-center gap-2">
-                          <Activity className="h-12 w-12 text-slate-100 mb-4" />
-                          <p>Hiện tại không ghi nhận khoa nào ở trạng thái quá tải định mức.</p>
+                    <td colSpan={5} className="px-8 py-20 text-center">
+                       <div className="flex flex-col items-center gap-4">
+                          <div className="h-20 w-20 rounded-full bg-blue-50 flex items-center justify-center">
+                             <ShieldCheck className="h-10 w-10 text-blue-200" />
+                          </div>
+                          <p className="text-slate-400 font-bold uppercase tracking-widest text-[11px]">Toàn viện đang ở trạng thái an toàn</p>
                        </div>
                     </td>
                   </tr>
