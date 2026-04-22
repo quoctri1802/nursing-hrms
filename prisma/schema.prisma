@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+}
+
+model User {
+  id               String   @id @default(cuid())
+  employeeCode     String   @unique
+  name             String
+  email            String?  @unique
+  password         String
+  phone            String?
+  role             Role     @default(NURSE)
+  departmentId     String?
+  department       Department? @relation(fields: [departmentId], references: [id])
+  position         String?
+  level            String?
+  experienceYears  Int?
+  schedules        Schedule[]
+  announcements    Announcement[]
+  leaveRequests    LeaveRequest[]
+  auditLogs        AuditLog[]
+}
+
+enum Role {
+  ADMIN
+  HEAD_NURSE
+  NURSE_DIRECTOR
+  NURSE
+}
+
+model Department {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  code        String   @unique
+  parentId    String?
+  parent      Department? @relation("SubDepartments", fields: [parentId], references: [id])
+  children    Department[] @relation("SubDepartments")
+  users       User[]
+  reports     DailyReport[]
+}
+
+model DailyReport {
+  id                String   @id @default(cuid())
+  date              DateTime @default(now())
+  departmentId      String
+  department        Department @relation(fields: [departmentId], references: [id])
+  
+  // New Manpower Fields
+  totalStaff        Int      @default(0)
+  adminStaff        Int      @default(0)
+  dutyStaff         Int      @default(0)
+  leaveStaff        Int      @default(0)
+  
+  // Patient Fields
+  patientsLevel1    Int
+  patientsLevel2    Int
+  patientsLevel3    Int
+  
+  suggestions       String?
+  createdAt         DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model Schedule {
+  id        String   @id @default(cuid())
+  date      DateTime
+  shiftType String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  status    String   @default("CONFIRMED") // PENDING, CONFIRMED
+}
+
+enum ShiftType {
+  ADMIN
+  DUTY
+  OFF
+}
+
+model Announcement {
+  id           String   @id @default(cuid())
+  title        String
+  content      String
+  authorId     String
+  author       User     @relation(fields: [authorId], references: [id])
+  imageUrl     String?
+  isPinned     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
+
+model LeaveRequest {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  startDate DateTime
+  endDate   DateTime
+  reason    String
+  status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  details   String?
+  timestamp DateTime @default(now())
+}
