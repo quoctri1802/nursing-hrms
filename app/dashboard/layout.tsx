@@ -1,5 +1,6 @@
 import { Header } from "@/components/header";
 import { Sidebar } from "@/components/sidebar";
+import { SidebarProvider } from "@/lib/sidebar-context";
 
 export default function DashboardLayout({
   children,
@@ -7,7 +8,8 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen relative overflow-hidden font-sans">
+    <SidebarProvider>
+      <div className="flex min-h-screen relative overflow-hidden font-sans">
       {/* BACKGROUND STATIC MEDICAL (BROLL THEME) */}
       <div className="absolute inset-0 z-[-1] overflow-hidden bg-slate-50">
          {/* Static Blurred Medical Backdrop */}
@@ -37,17 +39,18 @@ export default function DashboardLayout({
             <footer className="mt-12 py-10 px-8 text-center border-t border-slate-200/30">
               <div className="flex flex-col items-center gap-2">
                  <p className="text-slate-900 text-[10px] font-black uppercase tracking-[0.2em] opacity-50">
-                   © 2026 TTYT Quận Liên Chiểu - Nursing HRMS
+                   © 2026 Trung tâm Y tế Khu vực Liên Chiểu - Nursing HRMS
                  </p>
                  <div className="h-px w-8 bg-slate-200" />
                  <p className="text-[9px] font-black text-blue-400 uppercase tracking-[0.3em]">
-                   Premium Hospital Management
+                   Design by Quốc Trí
                  </p>
               </div>
             </footer>
           </main>
         </div>
       </div>
-    </div>
+      </div>
+    </SidebarProvider>
   );
 }

@@ -11,12 +11,15 @@ import {
   ShieldCheck,
   Briefcase,
   ClipboardList,
-  Heart
+  Heart,
+  Menu
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
+import { useSidebar } from "@/lib/sidebar-context";
 
 export function Header() {
+  const { toggle } = useSidebar();
   const { data: session } = useSession();
   const pathname = usePathname();
   const userName = session?.user?.name || "Người dùng";
@@ -60,8 +63,13 @@ export function Header() {
   return (
     <header className="h-20 bg-white/40 backdrop-blur-2xl border-b border-white/40 px-4 md:px-10 flex items-center justify-between sticky top-0 z-30 font-sans">
       <div className="flex items-center gap-6 flex-1">
-        {/* Spacer for mobile menu button which is in Sidebar.tsx */}
-        <div className="w-12 md:hidden" />
+        {/* Mobile menu button */}
+        <button 
+          onClick={toggle}
+          className="md:hidden p-3 bg-white/80 backdrop-blur-md rounded-2xl border border-slate-200 shadow-sm hover:scale-105 active:scale-95 transition-all"
+        >
+          <Menu className="h-6 w-6 text-slate-600" />
+        </button>
 
         {/* Breadcrumbs - Refined for desktop */}
         <nav className="hidden lg:flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">

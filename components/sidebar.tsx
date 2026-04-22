@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { signOut, useSession } from "next-auth/react";
+import { useSidebar } from "@/lib/sidebar-context";
 
 const menuItems = [
   {
@@ -71,13 +72,13 @@ const menuItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, setIsOpen } = useSidebar();
   const userRole = (session?.user as any)?.role || "NURSE";
 
   // Đóng sidebar khi chuyển trang trên mobile
   useEffect(() => {
     setIsOpen(false);
-  }, [pathname]);
+  }, [pathname, setIsOpen]);
 
   const filteredMenu = menuItems.filter(item => 
     item.roles.includes(userRole)
@@ -107,14 +108,6 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile Toggle Button */}
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 left-4 z-50 p-3 bg-white/80 backdrop-blur-md rounded-2xl border border-slate-200 shadow-xl md:hidden hover:scale-105 active:scale-95 transition-all"
-      >
-        {isOpen ? <X className="h-6 w-6 text-slate-600" /> : <Menu className="h-6 w-6 text-slate-600" />}
-      </button>
-
       {/* Overlay */}
       {isOpen && (
         <div 
@@ -141,8 +134,8 @@ export function Sidebar() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-base font-black text-slate-800 uppercase tracking-tighter leading-none">
-                TTYT Liên Chiểu
+              <span className="text-sm font-black text-slate-800 uppercase tracking-tighter leading-none">
+                Trung tâm Y tế <br /> Khu vực Liên Chiểu
               </span>
               <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.2em] mt-1">
                 Nursing HRMS

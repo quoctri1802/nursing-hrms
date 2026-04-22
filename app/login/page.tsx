@@ -85,7 +85,7 @@ export default function LoginPage() {
             </div>
             <div className="flex flex-col">
               <span className="text-2xl font-black tracking-tighter uppercase leading-tight text-white">
-                TTYT QUẬN LIÊN CHIỂU
+                TRUNG TÂM Y TẾ <br /> KHU VỰC LIÊN CHIỂU
               </span>
               <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.4em] mt-1">
                 Nursing HRMS System
@@ -125,7 +125,7 @@ export default function LoginPage() {
             </div>
             <div className="text-center">
               <h1 className="text-3xl font-black text-slate-900 tracking-tighter uppercase leading-none">
-                TTYT QUẬN <br /> LIÊN CHIỂU
+                TRUNG TÂM Y TẾ <br /> KHU VỰC LIÊN CHIỂU
               </h1>
               <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em] mt-2 block">Nurse HRMS</span>
             </div>
@@ -195,10 +195,10 @@ export default function LoginPage() {
             <div className="pt-10 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-3 text-[11px] font-bold text-slate-400">
                 <MapPin className="h-4 w-4 text-blue-500" />
-                Quận Liên Chiểu, TP. Đà Nẵng
+                Liên Chiểu, Đà Nẵng
               </div>
               <p className="text-[10px] font-black text-slate-800 uppercase tracking-widest opacity-30">
-                Design by tritnq
+                Design by Quốc Trí
               </p>
             </div>
           </div>

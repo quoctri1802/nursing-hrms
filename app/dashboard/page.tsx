@@ -109,7 +109,7 @@ export default async function DashboardPage() {
   const userDeptName = (session?.user as any)?.departmentName;
 
   const stats = await getDashboardStats(userRole === "HEAD_NURSE" ? userDeptId : undefined);
-  const displayDeptName = userRole === "HEAD_NURSE" ? `${userDeptName}` : "TTYT QUẬN LIÊN CHIỂU";
+  const displayDeptName = userRole === "HEAD_NURSE" ? `${userDeptName}` : "TRUNG TÂM Y TẾ KHU VỰC LIÊN CHIỂU";
 
   return (
     <div className="space-y-10 pb-10">
