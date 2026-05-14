@@ -9,20 +9,24 @@ export default function DashboardLayout({
 }) {
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen relative overflow-hidden font-sans">
-      {/* BACKGROUND STATIC MEDICAL (BROLL THEME) */}
-      <div className="absolute inset-0 z-[-1] overflow-hidden bg-slate-50">
-         {/* Static Blurred Medical Backdrop */}
-         <div 
-           className="absolute inset-0 bg-cover bg-center opacity-[0.08] blur-[1px] grayscale hover:grayscale-0 transition-all duration-1000"
-           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=2053&auto=format&fit=crop')" }}
-         />
+      <div className="flex min-h-screen relative overflow-hidden font-sans bg-[#F8FAFC]">
+      
+      {/* PREMIUM BACKGROUND LAYER */}
+      <div className="absolute inset-0 z-[-1] pointer-events-none overflow-hidden">
+         {/* Base Background Gradient */}
+         <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50 to-blue-50/30" />
          
-         {/* Mesh Gradients for Premium feel */}
-         <div className="absolute top-0 right-0 w-[50%] h-[50%] bg-blue-100/40 rounded-full blur-[120px]" />
-         <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-indigo-100/30 rounded-full blur-[100px]" />
+         {/* Subtle Medical Pattern */}
+         <div className="absolute inset-0 opacity-[0.03] grayscale contrast-125 mix-blend-multiply" 
+              style={{ backgroundImage: "radial-gradient(#2563eb 0.5px, transparent 0.5px)", backgroundSize: "24px 24px" }} />
          
-         <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px]" />
+         {/* Dynamic Mesh Gradients */}
+         <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-blue-100/40 rounded-full blur-[100px] animate-pulse" />
+         <div className="absolute bottom-[20%] left-[-10%] w-[35%] h-[35%] bg-indigo-50/50 rounded-full blur-[120px] animate-pulse delay-700" />
+         <div className="absolute top-[30%] left-[20%] w-[20%] h-[20%] bg-cyan-50/30 rounded-full blur-[80px]" />
+
+         {/* Backdrop Content Blur Overlay */}
+         <div className="absolute inset-0 backdrop-blur-[1px]" />
       </div>
 
       <Sidebar />
@@ -31,19 +35,25 @@ export default function DashboardLayout({
         <Header />
         
         <div className="flex-1 flex flex-col overflow-hidden">
-          <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-10 no-scrollbar">
-            <div className="mx-auto max-w-[1600px] animate-premium">
+          <main className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12 no-scrollbar">
+            <div className="mx-auto max-w-[1600px] animate-premium min-h-[calc(100vh-200px)]">
                {children}
             </div>
             
-            <footer className="mt-12 py-10 px-8 text-center border-t border-slate-200/30">
-              <div className="flex flex-col items-center gap-2">
-                 <p className="text-slate-900 text-[10px] font-black uppercase tracking-[0.2em] opacity-50">
-                   © 2026 Trung tâm Y tế Khu vực Liên Chiểu - Nursing HRMS
+            <footer className="mt-20 py-12 px-8 text-center border-t border-slate-200/50">
+              <div className="flex flex-col items-center gap-3">
+                 <div className="flex items-center gap-4 text-slate-400">
+                    <div className="h-px w-12 bg-slate-200" />
+                    <p className="text-[10px] font-bold uppercase tracking-[0.3em]">
+                      Hospital Management Infrastructure
+                    </p>
+                    <div className="h-px w-12 bg-slate-200" />
+                 </div>
+                 <p className="text-slate-900 text-[11px] font-black uppercase tracking-[0.2em] opacity-60">
+                   © 2026 TRUNG TÂM Y TẾ KHU VỰC LIÊN CHIỂU - NURSING HRMS
                  </p>
-                 <div className="h-px w-8 bg-slate-200" />
-                 <p className="text-[9px] font-black text-blue-400 uppercase tracking-[0.3em]">
-                   Design by Quốc Trí
+                 <p className="text-[10px] font-bold text-blue-600/50 uppercase tracking-[0.4em] mt-1">
+                   Author: Quốc Trí
                  </p>
               </div>
             </footer>
